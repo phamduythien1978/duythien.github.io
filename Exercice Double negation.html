@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercice – ne...ni...ni</title>
+<style>
+body {
+  font-family: "Trebuchet MS", sans-serif;
+  background-color: #f8f9fa;
+  margin: 40px;
+}
+h2 {
+  color: #3a3a3a;
+}
+.question {
+  background: #ffffff;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 8px;
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+}
+button {
+  padding: 10px 18px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+button:hover {
+  background-color: #0056b3;
+}
+#resultat {
+  margin-top: 15px;
+  font-weight: bold;
+}
+.correction {
+  margin-top: 6px;
+  color: #28a745;
+  display: none;
+  font-size: 14px;
+}
+</style>
+</head>
+<body>
+<h2>Exercice – Répondez négativement avec <em>ne... ni... ni</em></h2>
+
+<div class="question">
+1️⃣ Tu as des frères et sœurs ?<br>
+<input type="text" id="q1" placeholder="Ta réponse ici..."><br>
+<div class="correction" id="c1">→ Non, je n’ai ni frères ni sœurs.</div>
+</div>
+
+<div class="question">
+2️⃣ Tu aimes les chats et les chiens ?<br>
+<input type="text" id="q2" placeholder="Ta réponse ici..."><br>
+<div class="correction" id="c2">→ Non, je n’aime ni les chats ni les chiens.</div>
+</div>
+
+<div class="question">
+3️⃣ Ta sœur achète des bijoux en or et en argent ?<br>
+<input type="text" id="q3" placeholder="Ta réponse ici..."><br>
+<div class="correction" id="c3">→ Non, elle n’achète ni bijoux en or ni bijoux en argent. <br>
+(Variante acceptée : « Non, elle n’achète ni de bijoux en or ni de bijoux en argent. »)</div>
+</div>
+
+<div class="question">
+4️⃣ Nathalie porte des talons et du maquillage ?<br>
+<input type="text" id="q4" placeholder="Ta réponse ici..."><br>
+<div class="correction" id="c4">→ Non, elle ne porte ni talons ni maquillage.</div>
+</div>
+
+<div class="question">
+5️⃣ Ton frère lit des magazines de mode et regarde des défilés ?<br>
+<input type="text" id="q5" placeholder="Ta réponse ici..."><br>
+<div class="correction" id="c5">→ Non, il ne lit ni magazines de mode ni ne regarde de défilés.</div>
+</div>
+
+<button onclick="verifier()">Vérifier</button>
+
+<p id="resultat"></p>
+
+<script>
+function normaliser(texte) {
+  return texte
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "");
+}
+
+const reponses = [
+  // 1
+  ["non je nai ni freres ni soeurs", "je nai ni freres ni soeurs"],
+  // 2
+  ["non je naime ni les chats ni les chiens", "je naime ni les chats ni les chiens"],
+  // 3
+  [
+    "non elle nachète ni bijoux en or ni bijoux en argent",
+    "elle nachète ni bijoux en or ni bijoux en argent",
+    "non elle nachète ni de bijoux en or ni de bijoux en argent",
+    "elle nachète ni de bijoux en or ni de bijoux en argent"
+  ],
+  // 4
+  ["non elle ne porte ni talons ni maquillage", "elle ne porte ni talons ni maquillage"],
+  // 5
+  [
+    "non il ne lit ni magazines de mode ni ne regarde de defiles",
+    "il ne lit ni magazines de mode ni ne regarde de defiles",
+    "non il ne lit ni magazines de mode ni defiles",
+    "il ne lit ni magazines de mode ni defiles"
+  ]
+];
+
+function verifier() {
+  let score = 0;
+
+  for (let i = 1; i <= 5; i++) {
+    const reponseSaisie = normaliser(document.getElementById("q" + i).value);
+    const bons = reponses[i - 1];
+    const estCorrect = bons.some(c => reponseSaisie.includes(c));
+    const correction = document.getElementById("c" + i);
+    correction.style.display = "block";
+    if (estCorrect) score++;
+  }
+
+  document.getElementById("resultat").innerHTML =
+    "✅ Score : " + score + " / 5";
+}
+</script>
+
+</body>
+</html>
