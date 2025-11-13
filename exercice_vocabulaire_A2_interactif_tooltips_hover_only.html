@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vocabulaire A2 – Exercice interactif (mode & arts)</title>
+<style>
+  :root{--ok:#1b873c;--ko:#b00020;--ink:#222;--muted:#6a6a6a;--bg:#f8f9fb;--card:#ffffff;--accent:#1b73e8;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;line-height:1.5}
+  .wrap{max-width:920px;margin:24px auto;padding:24px}
+  .card{background:var(--card);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);padding:24px}
+  h1{font-size:1.4rem;margin:0 0 8px}
+  .subtitle{color:var(--muted);margin:0 0 16px}
+  ol{padding-left:1.2rem}
+  li{margin:12px 0;padding:12px;border:1px solid #eee;border-radius:12px;background:#fff}
+  select{min-width:220px;padding:8px;border-radius:10px;border:1px solid #cfd7e6;font-size:1rem}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .sent{flex:1 1 340px}
+  .badge{font-size:.88rem;padding:.15rem .5rem;border-radius:999px;border:1px solid #e5e7eb;color:var(--muted);background:#f5f6f8}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  button{padding:10px 14px;border-radius:12px;border:1px solid transparent;cursor:pointer;font-weight:600}
+  #check{background:var(--accent);color:#fff}
+  #reset{background:#fff;border:1px solid #d1d9e6;color:#1b2b42}
+  .feedback{font-weight:700}
+  .is-correct{color:var(--ok)}
+  .is-wrong{color:var(--ko)}
+  .score{margin-top:14px;font-weight:700}
+  a.word-link{text-decoration:none;color:var(--accent);border-bottom:1px dotted var(--accent);cursor:help;position:relative}
+  .tooltip{display:none;position:absolute;z-index:10;top:24px;left:0;max-width:240px;background:var(--card);border:1px solid #d1d9e6;border-radius:8px;padding:8px 10px;box-shadow:0 2px 8px rgba(0,0,0,.15);font-size:.9rem;color:var(--ink)}
+  a.word-link:hover .tooltip{display:block}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Vocabulaire – Niveau A2 (mode & arts)</h1>
+      <p class="subtitle">Choisissez le bon mot pour compléter chaque phrase. Cliquez ensuite sur <strong>Vérifier</strong> pour voir votre score.</p>
+      <p class="badge">
+        Liste de mots : 
+        <a class="word-link" href="#" title="Personne qui maîtrise très bien un art, comme la musique.">la virtuose
+          <span class="tooltip" role="tooltip">Personne qui maîtrise très bien un art, comme la musique.</span></a> – 
+        <a class="word-link" href="#" title="La beauté, le goût artistique.">l’esthétique
+          <span class="tooltip" role="tooltip">La beauté, le goût artistique.</span></a> – 
+        <a class="word-link" href="#" title="Une idée tournée vers l’avenir, l’innovation.">une approche visionnaire
+          <span class="tooltip" role="tooltip">Une idée tournée vers l’avenir, l’innovation.</span></a> – 
+        <a class="word-link" href="#" title="Qui a des caractéristiques masculines et féminines.">androgyne
+          <span class="tooltip" role="tooltip">Qui a des caractéristiques masculines et féminines.</span></a> – 
+        <a class="word-link" href="#" title="Silhouette grande, fine et élégante.">l’allure longiligne
+          <span class="tooltip" role="tooltip">Silhouette grande, fine et élégante.</span></a>
+      </p>
+
+      <ol id="quiz">
+        <li class="row" data-answer="la virtuose">
+          <span class="sent">1) Au concert, <strong>___</strong> jouait du violon avec beaucoup de talent.</span>
+          <select aria-label="Choisir un mot">
+            <option value="">— Sélectionnez —</option>
+          </select>
+          <span class="feedback" aria-live="polite"></span>
+        </li>
+        <li class="row" data-answer="l’esthétique">
+          <span class="sent">2) Ce peintre aime parler de <strong>___</strong> : la beauté dans l’art.</span>
+          <select aria-label="Choisir un mot">
+            <option value="">— Sélectionnez —</option>
+          </select>
+          <span class="feedback" aria-live="polite"></span>
+        </li>
+        <li class="row" data-answer="une approche visionnaire">
+          <span class="sent">3) Cette créatrice de mode a <strong>___</strong> : elle imagine les vêtements du futur.</span>
+          <select aria-label="Choisir un mot">
+            <option value="">— Sélectionnez —</option>
+          </select>
+          <span class="feedback" aria-live="polite"></span>
+        </li>
+        <li class="row" data-answer="androgyne">
+          <span class="sent">4) Ce mannequin est <strong>___</strong> : son apparence mélange traits masculins et féminins.</span>
+          <select aria-label="Choisir un mot">
+            <option value="">— Sélectionnez —</option>
+          </select>
+          <span class="feedback" aria-live="polite"></span>
+        </li>
+        <li class="row" data-answer="l’allure longiligne">
+          <span class="sent">5) Elle a <strong>___</strong> : elle est grande et très élégante.</span>
+          <select aria-label="Choisir un mot">
+            <option value="">— Sélectionnez —</option>
+          </select>
+          <span class="feedback" aria-live="polite"></span>
+        </li>
+      </ol>
+
+      <div class="actions">
+        <button id="check">Vérifier</button>
+        <button id="reset" type="button">Réinitialiser</button>
+      </div>
+      <div class="score" id="score" aria-live="polite"></div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const WORDS = ["la virtuose","l’esthétique","une approche visionnaire","androgyne","l’allure longiligne"];
+
+  function shuffled(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+
+  document.querySelectorAll("#quiz li select").forEach(sel=>{
+    const options = shuffled(WORDS);
+    for(const w of options){
+      const opt = document.createElement("option");
+      opt.value = w; opt.textContent = w;
+      sel.appendChild(opt);
+    }
+  });
+
+  const scoreBox = document.getElementById("score");
+  const checkBtn = document.getElementById("check");
+  const resetBtn = document.getElementById("reset");
+
+  checkBtn.addEventListener("click", ()=>{
+    let correct = 0, total = 0;
+    document.querySelectorAll("#quiz li").forEach(li=>{
+      total++;
+      const answer = li.getAttribute("data-answer");
+      const select = li.querySelector("select");
+      const fb = li.querySelector(".feedback");
+      if(select.value === answer){
+        correct++;
+        fb.textContent = "✓ Correct";
+        fb.classList.add("is-correct"); fb.classList.remove("is-wrong");
+        li.style.borderColor = "rgba(27,135,60,.45)";
+      }else{
+        fb.textContent = select.value ? "✗ Incorrect" : "—";
+        fb.classList.add("is-wrong"); fb.classList.remove("is-correct");
+        li.style.borderColor = "rgba(176,0,32,.35)";
+      }
+    });
+    scoreBox.textContent = `Score : ${correct} / ${total}`;
+  });
+
+  resetBtn.addEventListener("click", ()=>{
+    document.querySelectorAll("#quiz li").forEach(li=>{
+      const select = li.querySelector("select");
+      select.selectedIndex = 0;
+      const fb = li.querySelector(".feedback");
+      fb.textContent = "";
+      fb.classList.remove("is-correct","is-wrong");
+      li.style.borderColor = "#eee";
+    });
+    scoreBox.textContent = "";
+  });
+})();
+</script>
+</body>
+</html>
