@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Devenez Compagnons bâtisseurs – Version interactive A2</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { text-align: center; }
+    .def-term { position: relative; cursor: help; border-bottom: 1px dotted #333; }
+    .def-term:focus { outline: none; border-bottom: 2px solid #333; }
+    .def-term::after {
+      content: attr(data-def); position: absolute; left: 0; bottom: 130%;
+      background: #f5f5f5; padding: 0.5em 0.75em; border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2); width: 240px; font-size: 0.9em;
+      opacity: 0; pointer-events: none; transform: translateY(4px);
+      transition: opacity 0.2s ease, transform 0.2s ease; z-index: 10;
+    }
+    .def-term::before {
+      content: ""; position: absolute; left: 10px; bottom: 120%;
+      border-width: 6px; border-style: solid;
+      border-color: #f5f5f5 transparent transparent transparent;
+      opacity: 0; transition: opacity 0.2s ease; z-index: 9;
+    }
+    .def-term:hover::after,
+    .def-term:focus::after,
+    .def-term:hover::before,
+    .def-term:focus::before {
+      opacity: 1; transform: translateY(0);
+    }
+    .meta { margin-top: 1.5rem; font-size: 0.95em; }
+    .label { font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h1>Devenez Compagnons bâtisseurs</h1>
+
+  <p><strong>Consigne :</strong> Survolez les mots soulignés ou appuyez dessus pour voir leur définition.</p>
+
+  <p>
+    <span class="def-term" tabindex="0" data-def="Travail que l’on doit faire pour aider les autres.">Mission</span> :
+    <span class="def-term" tabindex="0" data-def="Association ou groupe qui organise la mission.">Compagnons bâtisseurs</span><br><br>
+
+    <span class="label">Où ?</span><br>
+    Fontenay-sous-Bois (94 - Val-de-Marne - Île-de-France)
+  </p>
+
+  <p>
+    <span class="label">Quoi ?</span><br>
+    La <span class="def-term" tabindex="0" data-def="Travail que l’on doit faire pour aider les autres.">mission</span>
+    proposée se situe à Fontenay-sous-Bois.
+  </p>
+
+  <p>
+    L’objectif est d’aider les habitants à améliorer leur
+    <span class="def-term" tabindex="0" data-def="Le logement où l’on vit.">logement / habitat</span>.
+  </p>
+
+  <p>
+    Le <span class="def-term" tabindex="0" data-def="Personne qui choisit d’aider sans être obligée.">volontaire</span>,
+    en <span class="def-term" tabindex="0" data-def="Deux personnes qui travaillent ensemble.">binôme</span>
+    avec un <span class="def-term" tabindex="0" data-def="Personne qui montre comment faire les travaux.">animateur technique</span>,
+    participera à des <span class="def-term" tabindex="0" data-def="Travaux pour réparer ou améliorer une maison ou un appartement.">chantiers de rénovation</span>
+    ou d’aménagement des <span class="def-term" tabindex="0" data-def="Logement dans un grand immeuble où vivent beaucoup d’habitants.">appartements des cités</span> avec les habitants.
+  </p>
+
+  <p>
+    Il participera également aux actions d’
+    <span class="def-term" tabindex="0" data-def="Activités pour faire vivre le quartier (ateliers, rencontres…).">animation du quartier</span>
+    autour des thématiques du
+    <span class="def-term" tabindex="0" data-def="Petits travaux faits à la maison (réparer, construire).">bricolage</span>
+    et de l’<span class="def-term" tabindex="0" data-def="Le logement où l’on vit.">habitat</span>.
+  </p>
+
+  <p>
+    Il aura aussi l’occasion de voyager en France ou à l’étranger grâce aux
+    <span class="def-term" tabindex="0" data-def="Travail fait avec des groupes dans d’autres pays.">partenariats internationaux</span>
+    de chantier.
+  </p>
+
+  <p class="meta">
+    <span class="label">Quand ?</span><br>
+    À partir du 1<sup>er</sup> mars (8 mois, 35 h/semaine)
+  </p>
+
+  <p class="meta">
+    <span class="label">Quel domaine ?</span><br>
+    <span class="def-term" tabindex="0" data-def="Aider les autres et agir ensemble.">Solidarité</span>
+  </p>
+
+  <p class="meta">
+    <span class="label">Combien de postes disponibles ?</span><br>
+    2
+  </p>
+
+  <p class="meta">
+    <span class="label">Quel organisme ?</span><br>
+    <span class="def-term" tabindex="0" data-def="Association ou groupe qui organise la mission.">Organisme</span> :
+    Compagnons bâtisseurs
+  </p>
+
+  <p class="meta">
+    <span class="label">La mission est accessible aux mineurs dès 16 ans ?</span><br>
+    Non
+  </p>
+
+  <p class="meta">
+    <span class="label">Contact :</span><br>
+    Krystel Leblanc — Tél. : 06 51 87 25 26<br>
+    Posez-lui des questions et présentez-lui votre CV.
+  </p>
+
+</body>
+</html>
