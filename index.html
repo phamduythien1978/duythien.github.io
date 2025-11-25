@@ -1,1 +1,544 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duy Thien | Học Tiếng Pháp Online</title>
+    <!-- Tailwind CSS (Framework giao diện hiện đại) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        
+        /* Hiệu ứng chuyển cảnh */
+        .section-view { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .section-view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* Custom Styles cho Bài đọc (Tooltips) - Giữ nguyên logic cũ nhưng đẹp hơn */
+        .def-term { border-bottom: 2px dotted #3b82f6; color: #1e40af; cursor: help; position: relative; transition: all 0.2s; }
+        .def-term:hover { background-color: #dbeafe; }
+        .def-term::after {
+            content: attr(data-def); position: absolute; left: 50%; bottom: 140%; transform: translateX(-50%) translateY(10px);
+            background: #1f2937; color: #fff; padding: 8px 12px; border-radius: 6px;
+            width: 220px; font-size: 0.85rem; text-align: center; opacity: 0; visibility: hidden;
+            transition: all 0.2s; pointer-events: none; z-index: 50; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .def-term::before {
+            content: ""; position: absolute; left: 50%; bottom: 120%; transform: translateX(-50%) translateY(10px);
+            border-width: 6px; border-style: solid; border-color: #1f2937 transparent transparent transparent;
+            opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 50;
+        }
+        .def-term:hover::after, .def-term:hover::before { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+
+        /* Custom Styles cho Bài nghe (Timer & Table) */
+        .lexique-table th { background-color: #eff6ff; color: #1e3a8a; }
+        .lexique-table td, .lexique-table th { border: 1px solid #e5e7eb; padding: 12px; }
+        
+        /* Custom Styles cho Bài Ngữ Pháp */
+        .grammar-input { transition: border-color 0.2s; }
+        .grammar-input:focus { border-color: #3b82f6; outline: none; ring: 2px; }
+    </style>
+</head>
+<body class="text-gray-800 min-h-screen flex flex-col">
+
+    <!-- NAVIGATION BAR -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2 cursor-pointer" onclick="showSection('home')">
+                    <div class="bg-blue-600 text-white p-2 rounded-lg">
+                        <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    </div>
+                    <span class="font-bold text-xl text-blue-900 tracking-tight">Duy Thiên French</span>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 font-medium text-gray-600">
+                    <button onclick="showSection('home')" class="hover:text-blue-600 transition">Trang chủ</button>
+                    <button onclick="showSection('reading')" class="hover:text-blue-600 transition">Đọc hiểu (A2)</button>
+                    <button onclick="showSection('listening')" class="hover:text-blue-600 transition">Nghe hiểu</button>
+                    <button onclick="showSection('grammar')" class="hover:text-blue-600 transition">Ngữ pháp</button>
+                    <button onclick="showSection('vocab')" class="hover:text-blue-600 transition">Từ vựng</button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-gray-600 focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-50 border-t border-gray-200 p-4">
+            <button onclick="showSection('home')" class="block w-full text-left py-2 text-gray-700 font-medium">Trang chủ</button>
+            <button onclick="showSection('reading')" class="block w-full text-left py-2 text-gray-700 font-medium">Đọc hiểu</button>
+            <button onclick="showSection('listening')" class="block w-full text-left py-2 text-gray-700 font-medium">Nghe hiểu</button>
+            <button onclick="showSection('grammar')" class="block w-full text-left py-2 text-gray-700 font-medium">Ngữ pháp</button>
+            <button onclick="showSection('vocab')" class="block w-full text-left py-2 text-gray-700 font-medium">Từ vựng</button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-grow max-w-5xl mx-auto w-full p-6">
+
+        <!-- SECTION: HOME (DASHBOARD) -->
+        <section id="home" class="section-view active">
+            <div class="text-center py-12">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Bienvenue !</h1>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Chào mừng đến với kho tài liệu học tiếng Pháp. Hãy chọn một kỹ năng bên dưới để bắt đầu luyện tập.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <!-- Card 1: Reading -->
+                <div onclick="showSection('reading')" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition cursor-pointer border border-gray-100 group">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-full group-hover:bg-blue-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-book-open text-xl"></i>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-800">Compréhension Écrite</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Chủ đề: Devenez Compagnons bâtisseurs. Bài tập tương tác với định nghĩa từ vựng.</p>
+                    <span class="text-sm font-semibold text-blue-600 group-hover:underline">Bắt đầu ngay &rarr;</span>
+                </div>
+
+                <!-- Card 2: Listening -->
+                <div onclick="showSection('listening')" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition cursor-pointer border border-gray-100 group">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 text-green-600 p-3 rounded-full group-hover:bg-green-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-headphones text-xl"></i>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-800">Compréhension Orale</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Chủ đề: Économie collaborative. Hoạt động chuẩn bị trước khi nghe.</p>
+                    <span class="text-sm font-semibold text-green-600 group-hover:underline">Bắt đầu ngay &rarr;</span>
+                </div>
+
+                <!-- Card 3: Grammar -->
+                <div onclick="showSection('grammar')" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition cursor-pointer border border-gray-100 group">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-purple-100 text-purple-600 p-3 rounded-full group-hover:bg-purple-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-pen-nib text-xl"></i>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-800">Grammaire</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Chủ đề: La double négation (ne... ni... ni...). Bài tập viết lại câu.</p>
+                    <span class="text-sm font-semibold text-purple-600 group-hover:underline">Bắt đầu ngay &rarr;</span>
+                </div>
+
+                <!-- Card 4: Vocabulary -->
+                <div onclick="showSection('vocab')" class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition cursor-pointer border border-gray-100 group">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-orange-100 text-orange-600 p-3 rounded-full group-hover:bg-orange-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-shapes text-xl"></i>
+                        </div>
+                        <h3 class="ml-4 text-xl font-bold text-gray-800">Vocabulaire (A2)</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Chủ đề: Mode & Arts. Bài tập trắc nghiệm tương tác.</p>
+                    <span class="text-sm font-semibold text-orange-600 group-hover:underline">Bắt đầu ngay &rarr;</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: READING (Compagnons bâtisseurs) -->
+        <section id="reading" class="section-view">
+            <div class="mb-6 flex items-center">
+                <button onclick="showSection('home')" class="text-gray-500 hover:text-blue-600 mr-4"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                <h2 class="text-2xl font-bold text-blue-800">Devenez Compagnons bâtisseurs</h2>
+            </div>
+            
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                    <p class="text-sm text-yellow-800"><strong>Consigne :</strong> Di chuột qua (hoặc chạm vào) các từ được gạch dưới để xem định nghĩa.</p>
+                </div>
+
+                <div class="space-y-6 text-lg leading-relaxed text-gray-700">
+                    <p>
+                        <span class="def-term font-semibold" tabindex="0" data-def="Công việc/Nhiệm vụ cần làm để giúp người khác.">Mission</span> :
+                        <span class="def-term font-semibold" tabindex="0" data-def="Tên hiệp hội tổ chức nhiệm vụ này.">Compagnons bâtisseurs</span>
+                    </p>
+
+                    <div class="grid md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                        <div>
+                            <span class="font-bold text-gray-900 block mb-1"><i class="fa-solid fa-location-dot text-red-500 mr-1"></i> Où ?</span>
+                            Fontenay-sous-Bois (94 - Val-de-Marne - Île-de-France)
+                        </div>
+                        <div>
+                            <span class="font-bold text-gray-900 block mb-1"><i class="fa-regular fa-circle-question text-blue-500 mr-1"></i> Quoi ?</span>
+                            La <span class="def-term" tabindex="0" data-def="Công việc/Nhiệm vụ cần làm.">mission</span> proposée se situe à Fontenay-sous-Bois.
+                        </div>
+                    </div>
+
+                    <p>
+                        L’objectif est d’aider les habitants à améliorer leur
+                        <span class="def-term" tabindex="0" data-def="Nơi ở, nhà ở.">logement / habitat</span>.
+                    </p>
+
+                    <p>
+                        Le <span class="def-term" tabindex="0" data-def="Tình nguyện viên (làm việc không lương).">volontaire</span>,
+                        en <span class="def-term" tabindex="0" data-def="Nhóm 2 người làm việc cùng nhau.">binôme</span>
+                        avec un <span class="def-term" tabindex="0" data-def="Người hướng dẫn kỹ thuật.">animateur technique</span>,
+                        participera à des <span class="def-term" tabindex="0" data-def="Công trường sửa chữa, tân trang.">chantiers de rénovation</span>
+                        ou d’aménagement des <span class="def-term" tabindex="0" data-def="Căn hộ trong khu chung cư lớn.">appartements des cités</span> avec les habitants.
+                    </p>
+
+                    <p>
+                        Il participera également aux actions d’
+                        <span class="def-term" tabindex="0" data-def="Hoạt động khu phố (hội thảo, gặp gỡ...).">animation du quartier</span>
+                        autour des thématiques du
+                        <span class="def-term" tabindex="0" data-def="Việc sửa chữa nhỏ trong nhà.">bricolage</span>
+                        et de l’<span class="def-term" tabindex="0" data-def="Nơi ở.">habitat</span>.
+                    </p>
+                    
+                    <div class="mt-8 border-t pt-6 grid md:grid-cols-2 gap-6 text-sm">
+                        <div>
+                            <span class="font-bold block">Quand ?</span>
+                            À partir du 1<sup>er</sup> mars (8 mois, 35 h/semaine)
+                        </div>
+                        <div>
+                            <span class="font-bold block">Quel domaine ?</span>
+                            <span class="def-term" tabindex="0" data-def="Sự đoàn kết, giúp đỡ lẫn nhau.">Solidarité</span>
+                        </div>
+                         <div>
+                            <span class="font-bold block">Combien de postes ?</span>
+                            2 vị trí
+                        </div>
+                        <div>
+                            <span class="font-bold block">Contact :</span>
+                             Krystel Leblanc — Tél. : 06 51 87 25 26
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: LISTENING (Economie collaborative) -->
+        <section id="listening" class="section-view">
+            <div class="mb-6 flex items-center">
+                <button onclick="showSection('home')" class="text-gray-500 hover:text-blue-600 mr-4"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                <h2 class="text-2xl font-bold text-green-700">Préparation à l'écoute : Économie collaborative</h2>
+            </div>
+
+            <!-- Timer Block -->
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 text-center mb-8">
+                <span class="block text-blue-800 font-semibold mb-2">Minuteur de préparation (10 phút)</span>
+                <div id="timer" class="text-4xl font-mono font-bold text-blue-600 mb-4">10:00</div>
+                <div class="space-x-2">
+                    <button id="startTimerBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium">Lancer</button>
+                    <button id="resetTimerBtn" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 font-medium">Réinitialiser</button>
+                </div>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">1. Mise en contexte</h3>
+                <div class="space-y-4">
+                    <div>
+                        <p class="mb-2 font-medium">Định nghĩa của bạn về kinh tế chia sẻ (économie collaborative)?</p>
+                        <textarea class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 outline-none" rows="2"></textarea>
+                    </div>
+                    <div>
+                        <p class="mb-2 font-medium">Ví dụ về các nền tảng bạn biết (Uber, Airbnb...)?</p>
+                        <textarea class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 outline-none" rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Lexique -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">2. Lexique (Từ vựng)</h3>
+                <p class="text-sm text-gray-500 mb-4">Nối từ ở cột trái với định nghĩa ở cột phải.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full lexique-table text-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-left w-1/3">Mot / Expression</th>
+                                <th class="w-24 text-center">Choix</th>
+                                <th class="text-left">Définitions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1. une plateforme numérique</td>
+                                <td class="text-center">
+                                    <select id="lex1" class="border p-1 rounded bg-white"><option value="">-</option><option value="a">a</option><option value="b">b</option><option value="c">c</option><option value="d">d</option><option value="e">e</option></select>
+                                </td>
+                                <td rowspan="5" class="bg-gray-50">
+                                    <div class="space-y-2">
+                                        <p><strong>a.</strong> Luật lệ, quy tắc quản lý hoạt động kinh tế.</p>
+                                        <p><strong>b.</strong> Trang web/Ứng dụng kết nối người dùng trao đổi hàng hóa/dịch vụ.</p>
+                                        <p><strong>c.</strong> Hoạt động nhằm mục đích kiếm lợi nhuận (tiền).</p>
+                                        <p><strong>d.</strong> Các quy định liên quan đến thuế.</p>
+                                        <p><strong>e.</strong> Dịch vụ trực tiếp giữa người với người, không qua công ty truyền thống.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2. un service entre particuliers</td>
+                                <td class="text-center"><select id="lex2" class="border p-1 rounded bg-white"><option value="">-</option><option value="a">a</option><option value="b">b</option><option value="c">c</option><option value="d">d</option><option value="e">e</option></select></td>
+                            </tr>
+                            <tr>
+                                <td>3. un cadre fiscal</td>
+                                <td class="text-center"><select id="lex3" class="border p-1 rounded bg-white"><option value="">-</option><option value="a">a</option><option value="b">b</option><option value="c">c</option><option value="d">d</option><option value="e">e</option></select></td>
+                            </tr>
+                            <tr>
+                                <td>4. une activité lucrative</td>
+                                <td class="text-center"><select id="lex4" class="border p-1 rounded bg-white"><option value="">-</option><option value="a">a</option><option value="b">b</option><option value="c">c</option><option value="d">d</option><option value="e">e</option></select></td>
+                            </tr>
+                            <tr>
+                                <td>5. une réglementation</td>
+                                <td class="text-center"><select id="lex5" class="border p-1 rounded bg-white"><option value="">-</option><option value="a">a</option><option value="b">b</option><option value="c">c</option><option value="d">d</option><option value="e">e</option></select></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4 flex items-center space-x-3">
+                    <button onclick="checkLexique()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 font-medium">Vérifier</button>
+                    <span id="lexiqueFeedback" class="font-bold"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: GRAMMAR (Double Negation) -->
+        <section id="grammar" class="section-view">
+             <div class="mb-6 flex items-center">
+                <button onclick="showSection('home')" class="text-gray-500 hover:text-blue-600 mr-4"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                <h2 class="text-2xl font-bold text-purple-700">Grammaire : La double négation</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <p class="mb-6 text-gray-600">Trả lời phủ định các câu hỏi sau sử dụng cấu trúc <strong>ne... ni... ni...</strong></p>
+                
+                <div class="space-y-6" id="grammar-container">
+                    <!-- JS will generate questions here to keep HTML clean -->
+                </div>
+
+                <div class="mt-8 flex items-center justify-between border-t pt-6">
+                    <button onclick="verifierGrammaire()" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 font-bold shadow-lg transform hover:-translate-y-0.5 transition">Kiểm tra kết quả</button>
+                    <p id="resultatGrammaire" class="text-xl font-bold text-purple-800"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: VOCABULARY (A2) -->
+        <section id="vocab" class="section-view">
+            <div class="mb-6 flex items-center">
+                <button onclick="showSection('home')" class="text-gray-500 hover:text-blue-600 mr-4"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                <h2 class="text-2xl font-bold text-orange-600">Vocabulaire A2 (Mode & Arts)</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <p class="mb-4 text-gray-600">Chọn từ thích hợp để điền vào chỗ trống.</p>
+                
+                <div class="bg-orange-50 p-4 rounded-lg mb-6 text-sm text-gray-700">
+                    <strong>Từ gợi ý:</strong> 
+                    <span class="mx-1 px-2 py-1 bg-white border rounded">la virtuose</span>
+                    <span class="mx-1 px-2 py-1 bg-white border rounded">l’esthétique</span>
+                    <span class="mx-1 px-2 py-1 bg-white border rounded">une approche visionnaire</span>
+                    <span class="mx-1 px-2 py-1 bg-white border rounded">androgyne</span>
+                    <span class="mx-1 px-2 py-1 bg-white border rounded">l’allure longiligne</span>
+                </div>
+
+                <ol id="quiz-vocab" class="list-decimal pl-5 space-y-4">
+                    <!-- JS will fill this -->
+                </ol>
+
+                <div class="mt-6">
+                    <button id="checkVocabBtn" class="bg-orange-500 text-white px-5 py-2 rounded hover:bg-orange-600 font-medium">Vérifier</button>
+                    <button id="resetVocabBtn" class="ml-2 bg-gray-200 text-gray-700 px-5 py-2 rounded hover:bg-gray-300 font-medium">Làm lại</button>
+                    <span id="scoreVocab" class="ml-4 font-bold text-orange-700"></span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-800 text-gray-300 py-6 mt-8">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p>&copy; 2025 Duy Thien. Tất cả quyền được bảo lưu.</p>
+            <p class="text-sm text-gray-500 mt-2">Học liệu tiếng Pháp trình độ A2-B1</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /* --- NAVIGATION LOGIC --- */
+        function showSection(id) {
+            // Hide all sections
+            document.querySelectorAll('.section-view').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Show target section
+            document.getElementById(id).classList.add('active');
+            // Close mobile menu if open
+            document.getElementById('mobile-menu').classList.add('hidden');
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        /* --- LOGIC: LISTENING (TIMER & LEXIQUE) --- */
+        let timerInterval;
+        let remainingSeconds = 600;
+
+        document.getElementById('startTimerBtn').addEventListener('click', function() {
+            if (timerInterval) return;
+            timerInterval = setInterval(() => {
+                if (remainingSeconds > 0) {
+                    remainingSeconds--;
+                    const m = String(Math.floor(remainingSeconds / 60)).padStart(2, '0');
+                    const s = String(remainingSeconds % 60).padStart(2, '0');
+                    document.getElementById('timer').textContent = `${m}:${s}`;
+                } else {
+                    clearInterval(timerInterval);
+                    alert("Hết giờ chuẩn bị!");
+                }
+            }, 1000);
+        });
+
+        document.getElementById('resetTimerBtn').addEventListener('click', function() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            remainingSeconds = 600;
+            document.getElementById('timer').textContent = "10:00";
+        });
+
+        function checkLexique() {
+            const answers = { lex1: 'b', lex2: 'e', lex3: 'd', lex4: 'c', lex5: 'a' };
+            let correct = 0;
+            for (let id in answers) {
+                const el = document.getElementById(id);
+                if (el.value === answers[id]) {
+                    correct++;
+                    el.classList.add('border-green-500', 'bg-green-50');
+                    el.classList.remove('border-red-500');
+                } else {
+                    el.classList.add('border-red-500', 'bg-red-50');
+                    el.classList.remove('border-green-500');
+                }
+            }
+            const fb = document.getElementById('lexiqueFeedback');
+            fb.textContent = correct === 5 ? "Tuyệt vời! Tất cả đều đúng." : `Kết quả: ${correct}/5 đúng.`;
+            fb.className = correct === 5 ? "font-bold text-green-600" : "font-bold text-red-600";
+        }
+
+        /* --- LOGIC: GRAMMAR EXERCISE --- */
+        const grammarQuestions = [
+            { q: "Tu as des frères et sœurs ?", a: ["je nai ni freres ni soeurs"], hint: "Non, je n’ai ni frères ni sœurs." },
+            { q: "Tu aimes les chats et les chiens ?", a: ["je naime ni les chats ni les chiens"], hint: "Non, je n’aime ni les chats ni les chiens." },
+            { q: "Ta sœur achète des bijoux en or et en argent ?", a: ["elle nachete ni bijoux en or ni bijoux en argent", "elle nachete ni de bijoux en or ni de bijoux en argent"], hint: "Non, elle n’achète ni bijoux en or ni bijoux en argent." },
+            { q: "Nathalie porte des talons et du maquillage ?", a: ["elle ne porte ni talons ni maquillage"], hint: "Non, elle ne porte ni talons ni maquillage." },
+            { q: "Ton frère lit des magazines de mode et regarde des défilés ?", a: ["il ne lit ni magazines de mode ni ne regarde de defiles", "il ne lit ni magazines de mode ni defiles"], hint: "Non, il ne lit ni magazines..." }
+        ];
+
+        // Render Grammar Questions
+        const gContainer = document.getElementById('grammar-container');
+        grammarQuestions.forEach((item, idx) => {
+            gContainer.innerHTML += `
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <p class="font-medium mb-2">${idx+1}️⃣ ${item.q}</p>
+                    <input type="text" id="g-q${idx}" class="grammar-input w-full border border-gray-300 rounded p-2" placeholder="Câu trả lời của bạn...">
+                    <div id="g-res${idx}" class="hidden mt-2 text-sm text-green-700 bg-green-100 p-2 rounded">Đáp án đúng: ${item.hint}</div>
+                </div>
+            `;
+        });
+
+        function normalizeText(text) {
+            return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+        }
+
+        function verifierGrammaire() {
+            let score = 0;
+            grammarQuestions.forEach((item, idx) => {
+                const userVal = normalizeText(document.getElementById(`g-q${idx}`).value);
+                // Simple check if user answer contains one of the key phrases (ignoring 'non')
+                const isCorrect = item.a.some(ans => userVal.includes(normalizeText(ans)) || userVal.includes(normalizeText(ans.replace('ne', ''))));
+                
+                const feedback = document.getElementById(`g-res${idx}`);
+                feedback.classList.remove('hidden');
+                
+                if (isCorrect) {
+                    score++;
+                    document.getElementById(`g-q${idx}`).classList.add('border-green-500', 'bg-green-50');
+                } else {
+                    document.getElementById(`g-q${idx}`).classList.add('border-red-500', 'bg-red-50');
+                }
+            });
+            document.getElementById('resultatGrammaire').textContent = `Điểm số: ${score} / 5`;
+        }
+
+        /* --- LOGIC: VOCAB QUIZ --- */
+        const vocabData = [
+            { t: "Au concert, ___ jouait du violon avec beaucoup de talent.", a: "la virtuose" },
+            { t: "Ce peintre aime parler de ___ : la beauté dans l’art.", a: "l’esthétique" },
+            { t: "Cette créatrice de mode a ___ : elle imagine les vêtements du futur.", a: "une approche visionnaire" },
+            { t: "Ce mannequin est ___ : son apparence mélange traits masculins et féminins.", a: "androgyne" },
+            { t: "Elle a ___ : elle est grande et très élégante.", a: "l’allure longiligne" }
+        ];
+        const vocabOptions = ["la virtuose","l’esthétique","une approche visionnaire","androgyne","l’allure longiligne"];
+
+        // Shuffle
+        function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+
+        const vocabList = document.getElementById('quiz-vocab');
+        vocabData.forEach((item, idx) => {
+            const opts = shuffle([...vocabOptions]);
+            let optHtml = `<option value="">-- Chọn từ --</option>`;
+            opts.forEach(w => optHtml += `<option value="${w}">${w}</option>`);
+
+            vocabList.innerHTML += `
+                <li class="bg-white p-3 rounded border border-gray-200" data-ans="${item.a}">
+                    <div class="mb-2 text-gray-800">${item.t.replace('___', '<span class="inline-block w-8 border-b-2 border-gray-400"></span>')}</div>
+                    <select class="vocab-select w-full md:w-auto border p-2 rounded bg-gray-50">${optHtml}</select>
+                    <span class="vocab-fb ml-2 font-bold hidden"></span>
+                </li>
+            `;
+        });
+
+        document.getElementById('checkVocabBtn').addEventListener('click', () => {
+            let c = 0;
+            document.querySelectorAll('#quiz-vocab li').forEach(li => {
+                const ans = li.getAttribute('data-ans');
+                const sel = li.querySelector('select');
+                const fb = li.querySelector('.vocab-fb');
+                
+                fb.classList.remove('hidden', 'text-green-600', 'text-red-600');
+                if (sel.value === ans) {
+                    c++;
+                    fb.textContent = "✓ Đúng";
+                    fb.classList.add('text-green-600');
+                    sel.classList.add('border-green-500');
+                } else {
+                    fb.textContent = "✗ Sai";
+                    fb.classList.add('text-red-600');
+                    sel.classList.add('border-red-500');
+                }
+            });
+            document.getElementById('scoreVocab').textContent = `Điểm: ${c} / 5`;
+        });
+        
+        document.getElementById('resetVocabBtn').addEventListener('click', () => {
+             document.querySelectorAll('#quiz-vocab select').forEach(s => {
+                 s.selectedIndex = 0;
+                 s.classList.remove('border-green-500', 'border-red-500');
+             });
+             document.querySelectorAll('.vocab-fb').forEach(f => f.classList.add('hidden'));
+             document.getElementById('scoreVocab').textContent = "";
+        });
+
+    </script>
+</body>
+</html>
