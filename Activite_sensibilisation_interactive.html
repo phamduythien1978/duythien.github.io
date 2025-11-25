@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activité de sensibilisation – Ubérisation (pré‑écoute)</title>
+<style>
+  :root{--gap:16px;--maxw:1100px;--card:#f7f7f9;--ink:#111827;--muted:#6b7280;--ok:#155724;--okbg:#d4edda;--ko:#721c24;--kobg:#f8d7da;}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;color:var(--ink);}
+  header{background:#111827;color:#fff;padding:16px;}
+  header h1{margin:0 0 6px;font-size:20px}
+  header p{margin:0;opacity:.85}
+  main{max-width:var(--maxw);margin:0 auto;padding:var(--gap);display:grid;gap:var(--gap)}
+  .card{background:var(--card);border-radius:14px;padding:16px}
+  h2{margin:0 0 10px}
+  .muted{color:var(--muted);font-size:14px}
+  textarea{width:100%;min-height:84px;border-radius:10px;border:1px solid #e5e7eb;padding:10px;resize:vertical}
+  .grid{display:grid;gap:12px}
+  .two{grid-template-columns:1fr 1fr}
+  @media (max-width:900px){.two{grid-template-columns:1fr}}
+  .match-wrap{display:grid;gap:8px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center}
+  select, input[type="text"]{width:100%;border:1px solid #e5e7eb;border-radius:10px;padding:8px}
+  .actions{display:flex;gap:10px;align-items:center;margin-top:10px}
+  button{padding:10px 14px;border-radius:10px;border:0;background:#111827;color:#fff;font-weight:600;cursor:pointer}
+  .score{font-weight:700}
+  .fb{display:none;padding:10px;border-radius:10px;margin-top:8px}
+  .fb.ok{background:var(--okbg);color:var(--ok)}
+  .fb.ko{background:var(--kobg);color:var(--ko)}
+  .tips{font-size:13px;color:var(--muted)}
+  .small{font-size:13px}
+  .save{background:#2563eb}
+</style>
+</head>
+<body>
+<header>
+  <h1>Activité de sensibilisation – Ubérisation (pré‑écoute)</h1>
+  <p>Objectif : activer les connaissances, le lexique et l’esprit critique avant la compréhension du document.</p>
+</header>
+
+<main>
+  <!-- 1. Brainstorming -->
+  <section class="card">
+    <h2>1) Mise en situation : plateformes au quotidien (5 min)</h2>
+    <p class="muted">En petit groupe, citez des applications/plateformes que vous utilisez (transport, livraison, hébergement, cours…). Notez vos idées.</p>
+    <div class="grid two">
+      <div>
+        <label class="small">Liste des plateformes (groupe)</label>
+        <textarea id="brainA" placeholder="Saisissez ici."></textarea>
+      </div>
+      <div>
+        <label class="small">Bénéficiaires selon vous (arguments)</label>
+        <textarea id="brainB" placeholder="Saisissez ici."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Repérage lexical (matching) -->
+  <section class="card">
+    <h2>2) Repérage lexical : associer mots et définitions (10 min)</h2>
+    <p class="tips">Sélectionnez, pour chaque terme, la bonne définition. Cliquez sur <em>Vérifier</em> pour le feedback et le score.</p>
+    <div class="match-wrap" id="match">
+      <div class="row">
+        <div>1) Plateforme numérique</div>
+        <div>
+          <select data-correct="a">
+            <option value="">— Choisir —</option>
+            <option value="a">a. Entreprise qui met en relation clients et prestataires via Internet</option>
+            <option value="b">b. Travailleur indépendant au statut simplifié</option>
+            <option value="c">c. Règles automatiques de calcul/décision d’une application</option>
+            <option value="d">d. Relation employeur–employé encadrée par contrat</option>
+            <option value="e">e. Gestion du travail à l’aide d’outils numériques</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div>2) Micro‑entrepreneur</div>
+        <div>
+          <select data-correct="b">
+            <option value="">— Choisir —</option>
+            <option value="a">a. Entreprise qui met en relation clients et prestataires via Internet</option>
+            <option value="b">b. Travailleur indépendant au statut simplifié</option>
+            <option value="c">c. Règles automatiques de calcul/décision d’une application</option>
+            <option value="d">d. Relation employeur–employé encadrée par contrat</option>
+            <option value="e">e. Gestion du travail à l’aide d’outils numériques</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div>3) Algorithme</div>
+        <div>
+          <select data-correct="c">
+            <option value="">— Choisir —</option>
+            <option value="a">a. Entreprise qui met en relation clients et prestataires via Internet</option>
+            <option value="b">b. Travailleur indépendant au statut simplifié</option>
+            <option value="c">c. Règles automatiques de calcul/décision d’une application</option>
+            <option value="d">d. Relation employeur–employé encadrée par contrat</option>
+            <option value="e">e. Gestion du travail à l’aide d’outils numériques</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div>4) Salariat</div>
+        <div>
+          <select data-correct="d">
+            <option value="">— Choisir —</option>
+            <option value="a">a. Entreprise qui met en relation clients et prestataires via Internet</option>
+            <option value="b">b. Travailleur indépendant au statut simplifié</option>
+            <option value="c">c. Règles automatiques de calcul/décision d’une application</option>
+            <option value="d">d. Relation employeur–employé encadrée par contrat</option>
+            <option value="e">e. Gestion du travail à l’aide d’outils numériques</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div>5) Management numérique</div>
+        <div>
+          <select data-correct="e">
+            <option value="">— Choisir —</option>
+            <option value="a">a. Entreprise qui met en relation clients et prestataires via Internet</option>
+            <option value="b">b. Travailleur indépendant au statut simplifié</option>
+            <option value="c">c. Règles automatiques de calcul/décision d’une application</option>
+            <option value="d">d. Relation employeur–employé encadrée par contrat</option>
+            <option value="e">e. Gestion du travail à l’aide d’outils numériques</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="checkMatch">Vérifier</button>
+      <span class="score" id="scoreMatch"></span>
+    </div>
+    <div class="fb" id="fbMatch"></div>
+  </section>
+
+  <!-- 3. Discussion guidée -->
+  <section class="card">
+    <h2>3) Discussion guidée (10 min)</h2>
+    <ol>
+      <li>Quels sont, selon vous, les avantages de travailler via une plateforme ?</li>
+      <li>Quels en sont les inconvénients/risques ?</li>
+      <li>Pourquoi parle‑t‑on d’« ubérisation de la société » ? Formulez une hypothèse.</li>
+    </ol>
+    <textarea id="discussion" placeholder="Saisissez ici."></textarea>
+  </section>
+
+  <!-- 4. Pré-lecture / définition -->
+  <section class="card">
+    <h2>4) Pré‑lecture : définir « ubériser » (5 min)</h2>
+    <p class="muted">D’après le dictionnaire : « ubériser » = rendre obsolète un modèle économique existant grâce aux plateformes numériques.</p>
+    <div class="grid two">
+      <div>
+        <label class="small">Définition (réécrite par le groupe)</label>
+        <textarea id="defi" placeholder="Saisissez ici."></textarea>
+      </div>
+      <div>
+        <label class="small">Secteurs potentiellement concernés</label>
+        <textarea id="secteurs" placeholder="Saisissez ici."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Production orale courte -->
+  <section class="card">
+    <h2>5) Production orale courte (facultatif)</h2>
+    <p>Formulez une phrase‑synthèse : <em>« Pour nous, l’ubérisation signifie… »</em></p>
+    <textarea id="synthese" placeholder="Saisissez ici."></textarea>
+    <div class="actions">
+      <button class="save" id="exportTxt">Exporter vos notes (.txt)</button>
+    </div>
+  </section>
+</main>
+
+<footer style="max-width:var(--maxw);margin:0 auto;padding:0 var(--gap) var(--gap);color:var(--muted);font-size:12px">
+  <p>Activité autonome – sans exemples ni guide enseignant. Fichier hors‑ligne, aucune dépendance externe.</p>
+</footer>
+
+<script>
+// Vérification du matching
+document.getElementById('checkMatch').addEventListener('click', function(){
+  const selects = document.querySelectorAll('#match select');
+  let score = 0, total = selects.length, allAnswered = true;
+  selects.forEach(sel => {
+    if(!sel.value) allAnswered = false;
+    const correct = sel.dataset.correct;
+    if(sel.value === correct) score++;
+  });
+  const scoreEl = document.getElementById('scoreMatch');
+  scoreEl.textContent = `Score: ${score} / ${total}`;
+  const fb = document.getElementById('fbMatch');
+  if(!allAnswered){
+    fb.className = 'fb ko';
+    fb.textContent = '❗️ Sélectionnez une réponse pour chaque ligne avant de valider.';
+  }else if(score === total){
+    fb.className = 'fb ok';
+    fb.textContent = '✅ Parfait ! Définitions validées.';
+  }else{
+    fb.className = 'fb ko';
+    fb.textContent = '❌ Révisez les correspondances incorrectes et revalidez.';
+  }
+  fb.style.display = 'block';
+});
+
+// Export des notes en .txt
+document.getElementById('exportTxt').addEventListener('click', function(){
+  const data = {
+    plateformes: document.getElementById('brainA').value,
+    beneficiaires: document.getElementById('brainB').value,
+    discussion: document.getElementById('discussion').value,
+    definition: document.getElementById('defi').value,
+    secteurs: document.getElementById('secteurs').value,
+    synthese: document.getElementById('synthese').value
+  };
+  const content = [
+    'Activité de sensibilisation – Ubérisation (pré‑écoute)',
+    '---',
+    '1) Plateformes (groupe):',
+    data.plateformes,
+    '',
+    'Bénéficiaires / arguments:',
+    data.beneficiaires,
+    '',
+    '3) Discussion guidée:',
+    data.discussion,
+    '',
+    '4) Définition réécrite:',
+    data.definition,
+    '',
+    'Secteurs potentiellement concernés:',
+    data.secteurs,
+    '',
+    '5) Phrase‑synthèse:',
+    data.synthese
+  ].join('\\n');
+  const blob = new Blob([content], {type:'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'Notes_activite_sensibilisation_uberisation.txt';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+});
+</script>
+</body>
+</html>
