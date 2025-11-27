@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Entretien + QCM (2 colonnes, minuteur 10 min, vérification manuelle)</title>
+<style>
+  :root{
+    --bg:#f7f7f9; --card:#fff; --border:#e6e6ef; --text:#222; --muted:#666;
+    --accent:#1a73e8; --ok:#17803d; --ko:#c62828;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);background:var(--bg);line-height:1.5}
+  header{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--border);z-index:20}
+  header .wrap{max-width:1200px;margin:0 auto;padding:12px 16px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+  h1{font-size:1.15rem;margin:0}
+  .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .btn{border:1px solid #d0d7de;background:#fff;padding:8px 12px;border-radius:8px;font-weight:700;cursor:pointer}
+  .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .btn:hover{border-color:#b9c0c7}
+  .timer{font-weight:800;min-width:92px;text-align:right}
+  .timer.warn{color:#d97706}.timer.danger{color:var(--ko)}
+  main{max-width:1200px;margin:20px auto;padding:0 16px 32px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+  .pane{padding:16px}
+  .pane h2{margin-top:0;font-size:1.05rem}
+  .transcript{height:calc(100vh - 190px);overflow:auto;padding-right:6px}
+  .transcript p{margin:0 0 10px}
+  .question{padding:12px;border:1px solid #eee;border-radius:10px;margin-bottom:12px}
+  .q{font-weight:700;margin:0 0 8px}
+  .options{display:grid;gap:8px}
+  label{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;padding:6px 8px;border-radius:8px;border:1px solid transparent}
+  input[type=radio]{transform:translateY(2px)}
+  label.correct{border-color:rgba(23,128,61,.35);background:rgba(23,128,61,.06)}
+  label.incorrect{border-color:rgba(198,40,40,.35);background:rgba(198,40,40,.06)}
+  .feedback{margin-top:6px;font-size:.95rem}
+  .feedback.ok{color:var(--ok)} .feedback.ko{color:var(--ko)}
+  .comment{display:none;margin-top:6px;font-size:.92rem;color:#333;background:#fffaf0;border:1px solid #ffe0a3;border-radius:8px;padding:8px}
+  .comment.show{display:block}
+  .score{font-weight:800}
+  .warning{color:#a15c00;background:#fff5e5;border:1px solid #ffd8a8;padding:8px;border-radius:8px;margin:8px 0;display:none}
+  .warning.show{display:block}
+  @media (max-width:960px){.grid{grid-template-columns:1fr}.transcript{height:auto;max-height:50vh}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Texte d'entretien + QCM (minuteur 10 min)</h1>
+    <div class="controls" role="group" aria-label="Contrôles">
+      <button id="startBtn" class="btn primary">Démarrer (10 min)</button>
+      <button id="pauseBtn" class="btn">Pause</button>
+      <button id="resetBtn" class="btn">Réinitialiser</button>
+      <button id="checkBtn" class="btn">Vérifier les réponses</button>
+      <span id="clock" class="timer" aria-live="polite"></span>
+      <span id="score" class="score" aria-live="polite"></span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+    <!-- LEFT: Texte d'entretien -->
+    <section class="card pane" aria-labelledby="left-title">
+      <h2 id="left-title">Texte – « L’entretien non préparé »</h2>
+      <div class="transcript">
+        <p><strong>Candidat</strong> — Bonjour Madame.</p>
+        <p><strong>Recruteur</strong> — Asseyez-vous. Vous êtes venu pour l’offre d’aide-comptable ?</p>
+        <p><strong>Candidat</strong> — Ben euh oui. C’est ma femme qui a vu l’offre dans <em>France Soir</em>. Alors comme je suis dans la comptabilité, je me suis dit que j’pouvais peut-être essayer, hein ?</p>
+        <p><strong>Recruteur</strong> — Oui… Je cherche une personne méthodique, organisée parce que l’ancienne aide-comptable l’était. Ce sont des qualités que j’apprécie beaucoup !</p>
+        <p><strong>Candidat</strong> — Oui.</p>
+        <p><strong>Recruteur</strong> — Vous êtes méthodique ?</p>
+        <p><strong>Candidat</strong> — Ben oui, j’crois oui. C’est ce qu’on dit de moi en général, hein… J’sais pas trop…</p>
+        <p><strong>Recruteur</strong> — Et ça fait longtemps que vous cherchez du travail ?</p>
+        <p><strong>Candidat</strong> — Vous savez, hein… C’est de plus en plus difficile… Y’a la crise… Pis surtout à mon âge, qu’est-ce que vous voulez… C’qu’on me reproche souvent c’est de ne pas avoir assez de diplôme.</p>
+        <p><strong>Recruteur</strong> — Oui, vous avez… 45 ans ?</p>
+        <p><strong>Candidat</strong> — Bah, oui.</p>
+        <p><strong>Recruteur</strong> — Mais avec votre expérience, vous n’étiez qu’aide-comptable ?</p>
+        <p><strong>Candidat</strong> — C’est-à-dire, j’étais passé comptable. Mais bon, vous savez c’que c’est, hein, ça faisait que deux ans, et puis… quand on cherche du travail on fait pas trop le difficile… On peut pas se permettre… En plus, j’ai plus d’allocations et puis… bon, autant vous le dire, c’est le premier entretien que j’ai depuis six mois. Vous voyez bien qu’c’est pas facile.</p>
+        <p><strong>Recruteur</strong> — Oui… Et vous êtes comptable depuis combien de temps vous m’avez dit ?</p>
+        <p><strong>Candidat</strong> — Depuis deux ans seulement. Mais c’est le problème avec tous ces jeunes qui arrivent sur le marché du travail avec tous leurs diplômes et tout ça. Alors pour moi la promotion c’était pas évident. Et puis c’qui faut dire, c’est que dans ma jeunesse, j’ai été malade assez longtemps alors j’ai dû changer d’emploi, enfin bon voilà ! Sinon j’crois bien que j’aurais pu finir par faire mon trou quelque part hein… J’suis pas plus bête qu’un autre.</p>
+        <p><strong>Recruteur</strong> — Hum, hum… Et dans votre dernier emploi, qu’est-ce qui s’est passé ? Qu’est-ce qui vous est arrivé ? Vous avez été licencié ?</p>
+        <p><strong>Candidat</strong> — Ben oui. C’est la maison qui a fait faillite. Remarquez, y’en a qui disent que le patron aurait fait un trou dans la caisse… Moi j’sais pas trop. Bien sûr on dit les comptables et tout ça… Moi j’étais pas tout à fait un sous-fifre mais j’étais pas au courant de ces choses-là. J’sais pas si c’est vrai. En tout cas tout ce que je sais, c’est qu’c’était un sacré caractère de cochon, ça c’est sûr… Et depuis j’ai rien trouvé.</p>
+        <p><strong>Recruteur</strong> — Hum. Hum. Pardonnez-moi cette question, c’est peut-être un peu indiscret, mais… Est-ce que vous étiez syndiqué ?</p>
+        <p><strong>Candidat</strong> — Enfin, c’est-à-dire que… je me suis laissé entraîner quoi… Mais j’ai bien fini par laisser tomber un jour ou l’autre.</p>
+        <p><strong>Recruteur</strong> — Vous vous êtes laissé entraîner ?</p>
+        <p><strong>Candidat</strong> — Bah, vous savez avec les copains, dans le travail, enfin les autres… C’est difficile de dire non…</p>
+        <p><strong>Recruteur</strong> — Bon je vois, d’accord. Et quel salaire vous demanderiez ?</p>
+        <p><strong>Candidat</strong> — Vous savez quand on cherche du boulot, on peut pas trop se permettre de faire le difficile… Mais j’ai quand même une femme et trois gosses à nourrir !</p>
+        <p><strong>Recruteur</strong> — Ce qui m’embête un peu dans votre candidature, c’est que l’ancienne comptable, c’était une femme, et je crois que je préfère quand même une femme à ce poste.</p>
+        <p><strong>Candidat</strong> — Ah, évidemment, alors là j’y peux rien. Remarquez, moi j’trouve que c’est pas toujours facile de travailler avec des femmes, mais… C’est vous qui décidez. Qu’est-ce que vous voulez qu’j’y fasse. Tant pis, hein…</p>
+        <p><strong>Recruteur</strong> — Bon, on vous écrira, Monsieur.</p>
+        <p><strong>Candidat</strong> — Oui, on dit toujours ça hein… Allez, au revoir Madame.</p>
+        <p><strong>Recruteur</strong> — Au revoir.</p>
+      </div>
+    </section>
+
+    <!-- RIGHT: QCM (éviter en entretien) -->
+    <section class="card pane" aria-labelledby="q-title">
+      <h2 id="q-title">QCM – Ce qu’il faut éviter en entretien</h2>
+      <div id="warn" class="warning" role="alert">Veuillez répondre à toutes les questions avant de cliquer sur « Vérifier les réponses ».</div>
+      <form id="quiz" novalidate>
+        <!-- Q1 -->
+        <fieldset class="question" data-answer="a" data-comment="Ne pas se préparer montre un manque de sérieux et de motivation. Il faut connaître l’entreprise, le poste et préparer ses réponses aux questions fréquentes.">
+          <p class="q">1. Que risque-t-il de se passer si l’on arrive sans préparation à un entretien ?</p>
+          <div class="options">
+            <label><input type="radio" name="q1" value="a"> a) On donne une image peu professionnelle</label>
+            <label><input type="radio" name="q1" value="b"> b) On montre que l’on est flexible</label>
+            <label><input type="radio" name="q1" value="c"> c) On suscite la curiosité du recruteur</label>
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+          <div class="comment"></div>
+        </fieldset>
+
+        <!-- Q2 -->
+        <fieldset class="question" data-answer="b" data-comment="Les critiques donnent une image négative de votre attitude et font craindre au recruteur que vous fassiez de même à l’avenir.">
+          <p class="q">2. Que faut-il éviter quand on parle de ses anciennes expériences professionnelles ?</p>
+          <div class="options">
+            <label><input type="radio" name="q2" value="a"> a) Être honnête mais constructif</label>
+            <label><input type="radio" name="q2" value="b"> b) Critiquer ouvertement ses anciens employeurs</label>
+            <label><input type="radio" name="q2" value="c"> c) Donner des exemples précis</label>
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+          <div class="comment"></div>
+        </fieldset>
+
+        <!-- Q3 -->
+        <fieldset class="question" data-answer="a" data-comment="L’entretien doit rester centré sur vos compétences et votre adéquation avec le poste, non sur vos difficultés personnelles.">
+          <p class="q">3. Pourquoi est-il déconseillé d’évoquer ses problèmes personnels en détail ?</p>
+          <div class="options">
+            <label><input type="radio" name="q3" value="a"> a) Parce que cela détourne la conversation de l’essentiel</label>
+            <label><input type="radio" name="q3" value="b"> b) Parce que cela rend la discussion plus longue</label>
+            <label><input type="radio" name="q3" value="c"> c) Parce que cela montre trop de motivation</label>
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+          <div class="comment"></div>
+        </fieldset>
+
+        <!-- Q4 -->
+        <fieldset class="question" data-answer="b" data-comment="Une réponse floue ou incertaine donne l’impression que vous ne vous connaissez pas bien ou que vous manquez de confiance.">
+          <p class="q">4. Quelle est la mauvaise manière de répondre à une question sur ses qualités ?</p>
+          <div class="options">
+            <label><input type="radio" name="q4" value="a"> a) Illustrer avec des exemples concrets</label>
+            <label><input type="radio" name="q4" value="b"> b) Répondre de manière hésitante et vague</label>
+            <label><input type="radio" name="q4" value="c"> c) Relier ses qualités au poste proposé</label>
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+          <div class="comment"></div>
+        </fieldset>
+
+        <!-- Q5 -->
+        <fieldset class="question" data-answer="b" data-comment="Répondre « peu importe » montre un manque de préparation et peut faire penser que vous ne connaissez pas votre valeur sur le marché.">
+          <p class="q">5. Comment ne pas réagir à une question sur le salaire souhaité ?</p>
+          <div class="options">
+            <label><input type="radio" name="q5" value="a"> a) Donner une fourchette réaliste</label>
+            <label><input type="radio" name="q5" value="b"> b) Répondre « peu importe » sans réflexion</label>
+            <label><input type="radio" name="q5" value="c"> c) Se renseigner sur les pratiques du secteur</label>
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+          <div class="comment"></div>
+        </fieldset>
+
+        <!-- Q6 -->
+        <fieldset class="question" data-answer="a" data-comment="Dénigrer des collègues ou supérieurs donne l’impression que vous ne savez pas travailler en équipe et peut laisser craindre des conflits futurs.">
+          <p class="q">6. Que faut-il éviter de dire au sujet d’anciens collègues ou supérieurs ?</p>
+          <div class="options">
+            <label><input type="radio" name="q6" value="a"> a) Des critiques négatives</label>
+            <label><input type="radio" name="q6" value="b"> b) Des exemples de collaboration réussie</label>
+            <label><input type="radio" name="q6" value="c"> c) Des souvenirs de projets communs</label>
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+          <div class="comment"></div>
+        </fieldset>
+
+        <!-- Q7 -->
+        <fieldset class="question" data-answer="a" data-comment="Le recruteur recherche une personne proactive, capable de trouver des solutions plutôt que de se plaindre.">
+          <p class="q">7. Pourquoi ne faut-il pas se plaindre de la concurrence ou du marché de l’emploi ?</p>
+          <div class="options">
+            <label><input type="radio" name="q7" value="a"> a) Parce que cela montre un manque de dynamisme</label>
+            <label><input type="radio" name="q7" value="b"> b) Parce que le recruteur connaît déjà la situation</label>
+            <label><input type="radio" name="q7" value="c"> c) Parce que cela prend du temps</label>
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+          <div class="comment"></div>
+        </fieldset>
+
+        <!-- Q8 -->
+        <fieldset class="question" data-answer="b" data-comment="Il vaut mieux défendre son profil avec diplomatie plutôt que de s’auto‑dévaloriser.">
+          <p class="q">8. Quelle attitude est à proscrire face aux préférences personnelles du recruteur ?</p>
+          <div class="options">
+            <label><input type="radio" name="q8" value="a"> a) Argumenter calmement et valoriser son profil</label>
+            <label><input type="radio" name="q8" value="b"> b) Faire preuve de résignation et se dévaloriser</label>
+            <label><input type="radio" name="q8" value="c"> c) Rester professionnel et neutre</label>
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+          <div class="comment"></div>
+        </fieldset>
+
+        <!-- Q9 -->
+        <fieldset class="question" data-answer="a" data-comment="Des réponses trop développées font perdre du temps et peuvent noyer l’information clé que vous voulez transmettre.">
+          <p class="q">9. Pourquoi faut-il éviter les réponses trop longues et hors sujet ?</p>
+          <div class="options">
+            <label><input type="radio" name="q9" value="a"> a) Parce que le recruteur peut se perdre dans les détails</label>
+            <label><input type="radio" name="q9" value="b"> b) Parce que cela montre qu’on parle trop vite</label>
+            <label><input type="radio" name="q9" value="c"> c) Parce que cela révèle un bon niveau d’aisance</label>
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+          <div class="comment"></div>
+        </fieldset>
+
+        <!-- Q10 -->
+        <fieldset class="question" data-answer="b" data-comment="La conclusion laisse une impression durable ; il faut la soigner en restant positif et professionnel.">
+          <p class="q">10. Comment ne pas conclure un entretien ?</p>
+          <div class="options">
+            <label><input type="radio" name="q10" value="a"> a) Remercier le recruteur pour son temps</label>
+            <label><input type="radio" name="q10" value="b"> b) Partir sur une remarque ironique ou défaitiste</label>
+            <label><input type="radio" name="q10" value="c"> c) Proposer d’envoyer des informations complémentaires</label>
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+          <div class="comment"></div>
+        </fieldset>
+      </form>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <p style="color:#555">Astuce : après la vérification, demandez aux apprenants de reformuler une bonne pratique pour chaque question.</p>
+</footer>
+
+<script>
+(function(){
+  const quiz = document.getElementById('quiz');
+  const startBtn = document.getElementById('startBtn');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const checkBtn = document.getElementById('checkBtn');
+  const clock = document.getElementById('clock');
+  const scoreEl = document.getElementById('score');
+  const warn = document.getElementById('warn');
+
+  let remaining = 600; // 10 minutes fixed
+  let ticking = null;
+  let verified = false;
+
+  function fmt(s){ const m=Math.floor(s/60).toString().padStart(2,'0'); const sec=(s%60).toString().padStart(2,'0'); return m+':'+sec; }
+  function setClock(s){
+    clock.textContent = '⏱ ' + fmt(Math.max(0, s));
+    clock.classList.toggle('warn', s <= 60 && s > 20);
+    clock.classList.toggle('danger', s <= 20 && s >= 0);
+  }
+  function clearFeedback(q){
+    q.querySelectorAll('label').forEach(l=>l.classList.remove('correct','incorrect'));
+    const fb=q.querySelector('.feedback'); if(fb){ fb.textContent=''; fb.className='feedback'; }
+    const c=q.querySelector('.comment'); if(c){ c.classList.remove('show'); c.textContent=''; }
+  }
+  function setDisabled(disabled){ quiz.querySelectorAll('input[type=radio]').forEach(i=>i.disabled=disabled); }
+
+  function allAnswered(){
+    const questions = quiz.querySelectorAll('.question');
+    for(let i=0;i<questions.length;i++){
+      const q = questions[i];
+      const name = 'q'+(i+1);
+      if (!quiz.querySelector('input[name="'+name+'"]:checked')) return false;
+    }
+    return true;
+  }
+
+  function evaluate(showComments){
+    let score=0,total=0;
+    const questions = quiz.querySelectorAll('.question');
+    questions.forEach((q, idx)=>{
+      total++;
+      clearFeedback(q);
+      const answer=(q.getAttribute('data-answer')||'').trim();
+      const name='q'+(idx+1);
+      const checked=quiz.querySelector('input[name="'+name+'"]:checked');
+      const fb=q.querySelector('.feedback');
+      const comment=q.querySelector('.comment');
+      if(!checked){
+        fb.textContent='Réponse manquante.';
+        fb.classList.add('ko');
+        return;
+      }
+      const chosen=checked.value;
+      const label=checked.closest('label');
+      if(chosen===answer){
+        score++;
+        if(label) label.classList.add('correct');
+        fb.textContent='Correct ✔️';
+        fb.classList.add('ok');
+      }else{
+        if(label) label.classList.add('incorrect');
+        const correctInput=q.querySelector('input[value="'+answer+'"]');
+        if(correctInput) correctInput.closest('label').classList.add('correct');
+        fb.textContent='Incorrect ✖️';
+        fb.classList.add('ko');
+      }
+      if (showComments){
+        const txt = q.getAttribute('data-comment')||'';
+        comment.textContent = 'Commentaire : ' + txt;
+        comment.classList.add('show');
+      }
+    });
+    scoreEl.textContent = `Score : ${score} / ${total}`;
+    return {score,total};
+  }
+
+  function start(){
+    if(verified) return;
+    if(ticking) return;
+    ticking = setInterval(()=>{
+      remaining--;
+      setClock(remaining);
+      if(remaining<=0){
+        clearInterval(ticking); ticking=null;
+        setClock(0);
+        // À l'échéance : évaluer sans forcer les commentaires si tout n'est pas rempli.
+        const show = allAnswered(); // commentaires seulement si toutes les réponses sont choisies
+        evaluate(show);
+        setDisabled(true);
+        verified = true;
+        warn.classList.remove('show');
+      }
+    },1000);
+    setClock(remaining);
+  }
+
+  function pause(){ if(ticking){ clearInterval(ticking); ticking=null; } }
+
+  function resetAll(){
+    pause(); verified=false; setDisabled(false);
+    remaining=600; setClock(remaining);
+    scoreEl.textContent='';
+    warn.classList.remove('show');
+    quiz.reset();
+    quiz.querySelectorAll('.question').forEach(q=> clearFeedback(q));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function manualCheck(){
+    if (verified) return;
+    if (!allAnswered()){
+      warn.classList.add('show');
+      // Fait défiler vers la première question non répondue
+      const questions = quiz.querySelectorAll('.question');
+      for(let i=0;i<questions.length;i++){
+        const name = 'q'+(i+1);
+        if (!quiz.querySelector('input[name="'+name+'"]:checked')){
+          questions[i].scrollIntoView({behavior:'smooth', block:'center'});
+          break;
+        }
+      }
+      return;
+    }
+    warn.classList.remove('show');
+    evaluate(true); // affiche les commentaires car tout est répondu
+    setDisabled(true);
+    verified = true;
+  }
+
+  // init
+  setClock(remaining);
+  startBtn.addEventListener('click', start);
+  pauseBtn.addEventListener('click', pause);
+  resetBtn.addEventListener('click', resetAll);
+  checkBtn.addEventListener('click', manualCheck);
+})();
+</script>
+</body>
+</html>
