@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice : Associer les mots aux définitions</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    h2 { color: #2c3e50; }
+    table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+    th, td { border: 1px solid #999; padding: 8px; text-align: left; }
+    select { width: 100%; padding: 4px; }
+    .btn { margin-top: 15px; padding: 8px 15px; background: #2c3e50; color: white; border: none; cursor: pointer; }
+    .btn:hover { background: #34495e; }
+    .result { margin-top: 20px; font-weight: bold; }
+    .correction { margin-top: 10px; color: darkgreen; }
+    #timer { font-size: 18px; font-weight: bold; color: red; margin-bottom: 15px; }
+  </style>
+</head>
+<body>
+  <h2>Exercice 1 : Associer les mots à leur définition</h2>
+  <p>Associez chaque mot ou expression (colonne A) à la définition correspondante (colonne B).</p>
+
+  <div id="timer">Temps restant : 03:00</div>
+
+  <table>
+    <tr>
+      <th>Colonne A</th>
+      <th>Colonne B</th>
+    </tr>
+    <tr><td>1. Transhumanisme</td><td><select id="q1"></select></td></tr>
+    <tr><td>2. Cyborg</td><td><select id="q2"></select></td></tr>
+    <tr><td>3. Paradigme technocratique</td><td><select id="q3"></select></td></tr>
+    <tr><td>4. Immortalité</td><td><select id="q4"></select></td></tr>
+    <tr><td>5. Ingénierie génétique</td><td><select id="q5"></select></td></tr>
+    <tr><td>6. Hypertechnologisme</td><td><select id="q6"></select></td></tr>
+  </table>
+
+  <button class="btn" onclick="corriger()" id="btnVerif">Vérifier mes réponses</button>
+
+  <div class="result" id="resultat"></div>
+  <div class="correction" id="correction"></div>
+
+  <script>
+    // Définitions
+    const definitions = {
+      a: "a. Idéologie selon laquelle la technologie, l’économie et la science peuvent résoudre tous les problèmes.",
+      b: "b. Être hybride, à la fois humain et machine.",
+      c: "c. Courant de pensée qui cherche à améliorer les capacités humaines grâce aux technologies.",
+      d: "d. Vivre éternellement, ne pas mourir.",
+      e: "e. Manière d’altérer l’ADN d’un organisme pour en transformer les caractéristiques.",
+      f: "f. Confiance excessive dans la technologie et son développement, au détriment d’autres dimensions humaines."
+    };
+
+    // Réponses correctes
+    const correct = {q1:"c", q2:"b", q3:"a", q4:"d", q5:"e", q6:"f"};
+
+    // Options des menus
+    const optionsHTML = `<option value="">-- Choisir une définition --</option>` +
+      Object.entries(definitions).map(([key, val]) => `<option value="${key}">${val}</option>`).join("");
+
+    // Injection des menus
+    for (let i=1; i<=6; i++) {
+      document.querySelector("#q"+i).innerHTML = optionsHTML;
+    }
+
+    // Fonction correction
+    function corriger() {
+      let score = 0;
+      for (let key in correct) {
+        const val = document.getElementById(key).value;
+        if (val === correct[key]) {
+          score++;
+        }
+      }
+      document.getElementById("resultat").innerText = "Votre score : " + score + " / 6";
+      document.getElementById("correction").innerHTML = `
+        <h3>Corrigé :</h3>
+        <ul>
+          <li>1. Transhumanisme → ${definitions[correct.q1]}</li>
+          <li>2. Cyborg → ${definitions[correct.q2]}</li>
+          <li>3. Paradigme technocratique → ${definitions[correct.q3]}</li>
+          <li>4. Immortalité → ${definitions[correct.q4]}</li>
+          <li>5. Ingénierie génétique → ${definitions[correct.q5]}</li>
+          <li>6. Hypertechnologisme → ${definitions[correct.q6]}</li>
+        </ul>`;
+    }
+
+    // Chronomètre 3 minutes
+    let temps = 180; // secondes
+    const timerEl = document.getElementById("timer");
+    const interval = setInterval(() => {
+      temps--;
+      let minutes = Math.floor(temps / 60);
+      let secondes = temps % 60;
+      timerEl.textContent = `Temps restant : ${minutes.toString().padStart(2,'0')}:${secondes.toString().padStart(2,'0')}`;
+      if (temps <= 0) {
+        clearInterval(interval);
+        timerEl.textContent = "Temps écoulé ⏰";
+        // Bloquer les sélections
+        for (let i=1; i<=6; i++) {
+          document.getElementById("q"+i).disabled = true;
+        }
+        document.getElementById("btnVerif").disabled = true;
+        corriger(); // correction automatique
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
