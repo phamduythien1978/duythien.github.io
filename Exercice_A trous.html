@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice 2 : Complétez les phrases à trous</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    h2 { color: #2c3e50; }
+    .question { margin-bottom: 12px; }
+    input { width: 250px; padding: 5px; }
+    .btn { margin-top: 15px; padding: 8px 15px; background: #2c3e50; color: white; border: none; cursor: pointer; }
+    .btn:hover { background: #34495e; }
+    .result { margin-top: 20px; font-weight: bold; }
+    .correction { margin-top: 10px; color: darkgreen; }
+    #timer { font-size: 18px; font-weight: bold; color: red; margin-bottom: 15px; }
+  </style>
+</head>
+<body>
+  <h2>Exercice 2 : Complétez les phrases à trous</h2>
+  <p>Complétez avec les mots suivants : <b>technologies – cyborgs – immortalité – adjuvants – limites – transhumanisme</b></p>
+
+  <div id="timer">Temps restant : 03:00</div>
+
+  <div class="question">1. Le <input type="text" id="q1"> cherche à repousser la souffrance, la vieillesse et la mort.</div>
+  <div class="question">2. Dans le futur, certains humains pourraient devenir des <input type="text" id="q2"> mi-homme mi-machine.</div>
+  <div class="question">3. Beaucoup considèrent que l’<input type="text" id="q3"> est un rêve aussi ancien que l’humanité.</div>
+  <div class="question">4. Pour améliorer ses performances, l’homme imagine utiliser des <input type="text" id="q4"> chimiques ou mécaniques.</div>
+  <div class="question">5. Le développement des nouvelles <input type="text" id="q5"> remet en question la condition humaine.</div>
+  <div class="question">6. La disparition des <input type="text" id="q6"> naturelles de l’homme pourrait avoir des conséquences imprévisibles.</div>
+
+  <button class="btn" onclick="corriger()" id="btnVerif">Vérifier mes réponses</button>
+
+  <div class="result" id="resultat"></div>
+  <div class="correction" id="correction"></div>
+
+  <script>
+    // Réponses correctes
+    const correct = {
+      q1: "transhumanisme",
+      q2: "cyborgs",
+      q3: "immortalité",
+      q4: "adjuvants",
+      q5: "technologies",
+      q6: "limites"
+    };
+
+    function corriger() {
+      let score = 0;
+      for (let key in correct) {
+        const val = document.getElementById(key).value.trim().toLowerCase();
+        if (val === correct[key]) {
+          score++;
+        }
+      }
+      document.getElementById("resultat").innerText = "Votre score : " + score + " / 6";
+      document.getElementById("correction").innerHTML = `
+        <h3>Corrigé :</h3>
+        <ul>
+          <li>1. transhumanisme</li>
+          <li>2. cyborgs</li>
+          <li>3. immortalité</li>
+          <li>4. adjuvants</li>
+          <li>5. technologies</li>
+          <li>6. limites</li>
+        </ul>`;
+    }
+
+    // Chronomètre 3 minutes
+    let temps = 180; // secondes
+    const timerEl = document.getElementById("timer");
+    const interval = setInterval(() => {
+      temps--;
+      let minutes = Math.floor(temps / 60);
+      let secondes = temps % 60;
+      timerEl.textContent = `Temps restant : ${minutes.toString().padStart(2,'0')}:${secondes.toString().padStart(2,'0')}`;
+      if (temps <= 0) {
+        clearInterval(interval);
+        timerEl.textContent = "Temps écoulé ⏰";
+        // Bloquer les champs
+        for (let i=1; i<=6; i++) {
+          document.getElementById("q"+i).disabled = true;
+        }
+        document.getElementById("btnVerif").disabled = true;
+        corriger(); // correction automatique
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
