@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le transhumanisme - Texte complet</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:1100px;margin:20px auto;padding:20px;line-height:1.8;background:#f5f7fa}
+h1{text-align:center}
+.consigne,.mots{background:white;padding:15px;border-radius:8px;margin-bottom:20px;border:1px solid #ddd}
+input{width:160px;padding:5px;text-align:center}
+.correct{border:2px solid green;background:#eafbea}
+.incorrect{border:2px solid red;background:#fdeaea}
+.feedback{font-weight:bold;margin-left:5px}
+button{padding:12px 20px;font-size:16px}
+#resultat{margin-top:20px;font-size:18px;font-weight:bold}
+</style>
+</head>
+<body>
+
+<h1>Le transhumanisme</h1>
+
+<div class="consigne">
+<strong>Consigne :</strong> Complétez cet article paru sur un site transhumaniste avec les mots suivants.
+</div>
+
+<div class="mots">
+neurodégénératives, bioniques, implants, cellules souches, régénération,
+endommagé, démiurgique, greffes, surhomme
+</div>
+
+<p>
+La jambe de bois du mutilé de jadis est bien loin : la médecine d’aujourd’hui multiplie
+les <input id="q1"><span id="f1" class="feedback"></span>
+de membres et les prothèses <input id="q2"><span id="f2" class="feedback"></span>
+qui transforment l’homme en <input id="q3"><span id="f3" class="feedback"></span>.
+</p>
+
+<p>
+« Dès les années 2030, nous allons, grâce à l’hybridation de nos cerveaux avec des nano-composants électroniques,
+disposer d’un pouvoir <input id="q4"><span id="f4" class="feedback"></span> »,
+affirme Ray Kurzweil.
+Équipés d’un cerveau constitué d’<input id="q5"><span id="f5" class="feedback"></span>,
+qui ressemblera à un cloud, nous pourrons choisir quels souvenirs conserver ou non mais aussi mieux lutter
+contre les maladies <input id="q6"><span id="f6" class="feedback"></span> comme Parkinson.
+</p>
+
+<p>
+Sur le modèle de la <input id="q7"><span id="f7" class="feedback"></span>
+de la salamandre, animal étonnant capable de se fabriquer un membre,
+des chercheurs travaillent sur une thérapie par
+<input id="q8"><span id="f8" class="feedback"></span>
+capables de reconstituer n’importe quel tissu humain
+<input id="q9"><span id="f9" class="feedback"></span>,
+que ce soit par une blessure, une maladie ou simplement l’âge.
+La fin de la mort n’est pas bien loin !
+</p>
+
+<button onclick="verifier()">Vérifier les réponses</button>
+<div id="resultat"></div>
+
+<script>
+const r={
+q1:"greffes",
+q2:"bioniques",
+q3:"surhomme",
+q4:"démiurgique",
+q5:"implants",
+q6:"neurodégénératives",
+q7:"régénération",
+q8:"cellules souches",
+q9:"endommagé"
+};
+function n(t){return t.trim().toLowerCase();}
+function verifier(){
+let s=0;
+for(let i=1;i<=9;i++){
+let c=document.getElementById("q"+i);
+let f=document.getElementById("f"+i);
+if(n(c.value)==n(r["q"+i])){
+c.className="correct";f.textContent="✅";s++;
+}else{
+c.className="incorrect";f.textContent="❌";
+}
+}
+document.getElementById("resultat").innerHTML=s==9?
+"🎉 Félicitations ! Toutes les réponses sont correctes (9/9)." :
+"Résultat : "+s+"/9 réponses correctes.";
+}
+</script>
+
+</body>
+</html>
