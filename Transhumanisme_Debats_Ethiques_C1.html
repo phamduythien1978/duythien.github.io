@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transhumanisme et Débats éthiques - Réemploi lexical C1</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:1200px;margin:30px auto;padding:25px;background:#f4f7fa;line-height:1.6}
+h1{color:#0b6e8a;text-align:center}
+h2{color:#444;text-align:center}
+.box{background:#fff;padding:20px;border-radius:10px;margin-bottom:20px;box-shadow:0 2px 5px rgba(0,0,0,.1)}
+.lexique{columns:2}
+.question{margin-bottom:18px}
+input{width:330px;padding:6px;font-size:15px}
+button{background:#0b6e8a;color:white;border:none;padding:12px 25px;border-radius:8px;cursor:pointer}
+.correct{color:green;font-weight:bold}
+.incorrect{color:red;font-weight:bold}
+#score{margin-top:20px;font-size:22px;font-weight:bold}
+</style>
+</head>
+<body>
+
+<h1>Transhumanisme et Débats éthiques</h1>
+<h2>Exercice de réemploi lexical (Niveau C1)</h2>
+
+<div class="box">
+<strong>Consigne :</strong> Complétez les phrases suivantes avec les termes de la liste. L'ordre des termes ne correspond pas à celui des réponses.
+</div>
+
+<div class="box">
+<h3>Lexique</h3>
+<div class="lexique">
+• tempérer<br>
+• un comité de bioéthique<br>
+• au profit de<br>
+• se revendiquer de<br>
+• bannir<br>
+• convaincre du bien-fondé<br>
+• un cas de conscience<br>
+• au nom de<br>
+• soulever un débat moral<br>
+• adopter<br>
+• nuancer<br>
+• au détriment de<br>
+• concilier les idéaux démocratiques et la technophilie<br>
+• avoir des scrupules<br>
+• proscrire
+</div>
+</div>
+
+<div class="box" id="questions"></div>
+
+<script>
+const phrases=[
+"Certains chercheurs souhaitent développer les technologies d’augmentation humaine _____ la santé et du bien-être collectif.",
+"Les opposants au transhumanisme accusent parfois ses partisans d’agir _____ la dignité humaine.",
+"Plusieurs entreprises investissent massivement dans l’intelligence artificielle _____ la recherche du progrès.",
+"Avant d’implanter une puce cérébrale chez un patient, certains médecins peuvent _____ en raison des risques encourus.",
+"Face à certaines expérimentations génétiques, des associations demandent de _____ les pratiques les plus dangereuses.",
+"Dans plusieurs pays, le clonage reproductif humain est officiellement ____ par la loi.",
+"Certains défenseurs du transhumanisme souhaitent _____ les innovations technologiques les plus avancées.",
+"Pour de nombreux scientifiques, modifier génétiquement des embryons constitue _____ particulièrement complexe.",
+"Avant d’autoriser une nouvelle technologie médicale, le dossier est souvent examiné par _____.",
+"Les sociétés modernes doivent trouver un moyen de _____ afin que le progrès technologique reste compatible avec les libertés fondamentales.",
+"Les partisans du projet cherchent à _____ de leurs arguments scientifiques.",
+"Plusieurs experts appellent à _____ les discours alarmistes annonçant la fin imminente de l’humanité.",
+"Les chercheurs les plus prudents tentent également de _____ l’enthousiasme excessif suscité par certaines innovations.",
+"Certains mouvements transhumanistes aiment _____ l’humanisme et la liberté individuelle.",
+"Le développement de l’intelligence artificielle continue de _____ dans de nombreux pays."
+];
+
+const reponses=[
+"au profit de",
+"au détriment de",
+"au nom de",
+"avoir des scrupules",
+"bannir",
+"proscrit",
+"adopter",
+"un cas de conscience",
+"un comité de bioéthique",
+"concilier les idéaux démocratiques et la technophilie",
+"convaincre du bien-fondé",
+"nuancer",
+"tempérer",
+"se revendiquer de",
+"soulever un débat moral"
+];
+
+let contenu="";
+phrases.forEach((p,i)=>{
+contenu+=`<div class="question"><strong>${i+1}.</strong> ${p.replace("_____","<input id='q${i}'>")} <span id='r${i}'></span></div>`;
+});
+contenu+=`<button onclick="verifier()">Vérifier les réponses</button><div id="score"></div>`;
+document.getElementById("questions").innerHTML=contenu;
+
+function norm(t){
+return t.toLowerCase().trim().replace(/’/g,"'").replace(/\s+/g," ");
+}
+
+function verifier(){
+let score=0;
+for(let i=0;i<reponses.length;i++){
+let rep=norm(document.getElementById('q'+i).value);
+let cor=norm(reponses[i]);
+let zone=document.getElementById('r'+i);
+if(rep===cor){
+zone.innerHTML=' ✅ Correct';
+zone.className='correct';
+score++;
+}else{
+zone.innerHTML=' ❌ Incorrect';
+zone.className='incorrect';
+}
+}
+document.getElementById('score').innerHTML='Score : '+score+' / '+reponses.length;
+}
+</script>
+
+</body>
+</html>
