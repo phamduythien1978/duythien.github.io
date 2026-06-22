@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Éthique et transhumanisme - Réemploi lexical</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:1200px;margin:30px auto;padding:20px;background:#f4f7fa}
+h1{color:#006699}
+.consigne{background:#eef7ff;padding:15px;border-left:5px solid #006699;margin-bottom:20px}
+.lexique,.exercice{background:white;padding:20px;border-radius:10px}
+.question{margin-bottom:18px}
+input{width:380px;padding:6px;font-size:15px}
+.correct{color:green;font-weight:bold}
+.incorrect{color:red;font-weight:bold}
+button{margin-top:20px;padding:12px 25px;font-size:16px;background:#006699;color:white;border:none;border-radius:8px;cursor:pointer}
+#score{margin-top:20px;font-size:20px;font-weight:bold}
+</style>
+</head>
+<body>
+<h1>Éthique et transhumanisme – Réemploi lexical</h1>
+<div class="consigne"><strong>Consigne :</strong> Complétez les phrases suivantes avec les termes de la liste.</div>
+<div class="lexique">
+<strong>Liste des termes :</strong><br><br>
+accuser – alerter – ameuter les foules – alimenter les fantasmes – amplifier les inégalités socio-économiques – la cybersécurité – un délire dangereux – une dérive incontrôlable – désapprouver – une idéologie néo-libérale – un lanceur d’alerte – la protection des données personnelles – receler un danger – un scénario catastrophe – sceptique – s’indigner – mettre fin à l’espèce humaine
+</div><br>
+<div class="exercice" id="exo"></div>
+<script>
+const questions=[
+"Certains chercheurs craignent que les technologies d’augmentation humaine puissent _____.",
+"Les opposants au projet n’hésitent pas à _____ contre les risques liés à l’intelligence artificielle.",
+"Pour certains militants, le transhumanisme représente _____ qui menace l’équilibre de la société.",
+"Les médias sensationnalistes ont parfois tendance à _____ autour des robots et de l’IA.",
+"Plusieurs experts restent _____ quant aux promesses d’immortalité.",
+"Les défenseurs de la vie privée insistent sur l’importance de _____.",
+"Selon certains critiques, le mouvement transhumaniste repose sur _____ privilégiant la performance et la compétition.",
+"Des associations ont appelé les citoyens à _____ face aux abus potentiels des nouvelles technologies.",
+"Certains films de science-fiction imaginent que l’intelligence artificielle pourrait un jour _____.",
+"Les spécialistes de _____ travaillent à prévenir les attaques informatiques.",
+"Le chercheur a voulu _____ l’opinion publique sur les conséquences possibles des implants cérébraux.",
+"Plusieurs observateurs _____ les grandes entreprises technologiques de ne pas respecter suffisamment l’éthique.",
+"Ce programme expérimental pourrait _____ dont les effets à long terme restent inconnus.",
+"Le scientifique est devenu _____ après avoir révélé des pratiques jugées dangereuses.",
+"Les critiques les plus virulentes parlent parfois d’_____ vers une société déshumanisée.",
+"Afin de défendre leur cause, certains militants cherchent à _____ grâce à des messages alarmistes.",
+"Les adversaires du projet _____ ouvertement cette orientation technologique.",
+"Certains journalistes décrivent l’avènement d’une super-intelligence comme _____."
+];
+
+const reponses={
+1:"amplifier les inégalités socio-économiques",
+2:"alerter",
+3:"un délire dangereux",
+4:"alimenter les fantasmes",
+5:"sceptique",
+6:"la protection des données personnelles",
+7:"une idéologie néo-libérale",
+8:"s’indigner",
+9:"mettre fin à l’espèce humaine",
+10:"la cybersécurité",
+11:"alerter",
+12:"accuser",
+13:"receler un danger",
+14:"un lanceur d’alerte",
+15:"une dérive incontrôlable",
+16:"ameuter les foules",
+17:"désapprouver",
+18:"un scénario catastrophe"
+};
+
+const exo=document.getElementById("exo");
+questions.forEach((q,i)=>{
+exo.innerHTML+=`<div class="question"><b>${i+1}.</b> ${q.replace("_____","<input id='q"+(i+1)+"'>")} <span id='r${i+1}'></span></div>`;
+});
+exo.innerHTML+=`<button onclick="verifier()">Vérifier les réponses</button><div id="score"></div>`;
+
+function norm(t){return t.toLowerCase().trim().replace(/’/g,"'").replace(/\s+/g," ");}
+function verifier(){
+let score=0;
+for(let i=1;i<=18;i++){
+let ok=norm(document.getElementById("q"+i).value)===norm(reponses[i]);
+let r=document.getElementById("r"+i);
+if(ok){r.innerHTML="✅ Correct";r.className="correct";score++;}
+else{r.innerHTML="❌ Incorrect";r.className="incorrect";}
+}
+document.getElementById("score").innerHTML="<strong>Score : "+score+" / 18</strong>";
+}
+</script>
+</body>
+</html>
